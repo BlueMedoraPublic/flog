@@ -13,4 +13,8 @@ RUN go build -o /bin/flog
 
 FROM scratch
 COPY --from=0 /bin/flog /bin/flog
+
+ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /zoneinfo.zip
+ENV ZONEINFO /zoneinfo.zip
+
 ENTRYPOINT ["flog"]
