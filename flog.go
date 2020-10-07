@@ -13,14 +13,22 @@ import (
 
 // Generate generates the logs with given options
 func Generate(option *Option) error {
-	loc, err := time.LoadLocation("America/New_York")
-	if err != nil {
-		return err
+	var loc *time.Location
+	if os.Getenv("ERROR_LOGS") != "" {
+		var err error
+		loc, err = time.LoadLocation("America/New_York")
+		if err != nil {
+			return err
+		}
 	}
+
+	created := time.Now()
+	if os.Getenv("ERROR_LOGS") != "" {
+		created	= time.Now().In(loc)
+	}
+
 	var (
 		splitCount = 1
-		created    = time.Now().In(loc)
-
 		interval time.Duration
 		delay    time.Duration
 	)
