@@ -2,44 +2,55 @@ package main
 
 import (
 	"compress/gzip"
-	"fmt"
 	"io"
 	"os"
+	"fmt"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
+	"math/rand"
 )
+
+func Worker(option *Option, writer io.WriteCloser) {
+	var loc *time.Location
+	var err error
+	loc, err = time.LoadLocation("America/New_York")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+	created	:= time.Now().In(loc)
+
+	var (
+		interval time.Duration
+	)
+
+	x := os.Getenv("MAX_SLEEP")
+	maxSleep := 30
+	if x != "" {
+		var err error
+		if maxSleep, err = strconv.Atoi(x); err != nil {
+			fmt.Println("MAX_SLEEP: " + x + " is not valid")
+			os.Exit(1)
+		}
+	}
+	fmt.Println("using max sleep: " + strconv.Itoa(maxSleep))
+
+	for {
+		log := NewLog(option.Format, created)
+		_, _ = writer.Write([]byte(log + "\n"))
+		created = created.Add(interval)
+
+		rand.Seed(time.Now().UnixNano())
+		n := rand.Intn(maxSleep) // n will be between 0 and 10
+		time.Sleep(time.Duration(n)*time.Second)
+	}
+}
 
 // Generate generates the logs with given options
 func Generate(option *Option) error {
-	var loc *time.Location
-	if os.Getenv("ERROR_LOGS") != "" {
-		var err error
-		loc, err = time.LoadLocation("America/New_York")
-		if err != nil {
-			return err
-		}
-	}
 
-	created := time.Now()
-	if os.Getenv("ERROR_LOGS") != "" {
-		created	= time.Now().In(loc)
-	}
-
-	var (
-		splitCount = 1
-		interval time.Duration
-		delay    time.Duration
-	)
-
-	if option.Delay > 0 {
-		interval = option.Delay
-		delay = interval
-	}
-	if option.Sleep > 0 {
-		interval = option.Sleep
-	}
 
 	logFileName := option.Output
 	writer, err := NewWriter(option.Type, logFileName)
@@ -47,58 +58,13 @@ func Generate(option *Option) error {
 		return err
 	}
 
-	if option.Forever {
-		for {
-			time.Sleep(delay)
-			log := NewLog(option.Format, created)
-			_, _ = writer.Write([]byte(log + "\n"))
-			created = created.Add(interval)
-		}
-	}
+	go Worker(option, writer)
+	go Worker(option, writer)
+	go Worker(option, writer)
+	go Worker(option, writer)
 
-	if option.Bytes == 0 {
-		// Generates the logs until the certain number of lines is reached
-		for line := 0; line < option.Number; line++ {
-			time.Sleep(delay)
-			log := NewLog(option.Format, created)
-			_, _ = writer.Write([]byte(log + "\n"))
-
-			if (option.Type != "stdout") && (option.SplitBy > 0) && (line > option.SplitBy*splitCount) {
-				_ = writer.Close()
-				fmt.Println(logFileName, "is created.")
-
-				logFileName = NewSplitFileName(option.Output, splitCount)
-				writer, _ = NewWriter(option.Type, logFileName)
-
-				splitCount++
-			}
-			created = created.Add(interval)
-		}
-	} else {
-		// Generates the logs until the certain size in bytes is reached
-		bytes := 0
-		for bytes < option.Bytes {
-			time.Sleep(delay)
-			log := NewLog(option.Format, created)
-			_, _ = writer.Write([]byte(log + "\n"))
-
-			bytes += len(log)
-			if (option.Type != "stdout") && (option.SplitBy > 0) && (bytes > option.SplitBy*splitCount+1) {
-				_ = writer.Close()
-				fmt.Println(logFileName, "is created.")
-
-				logFileName = NewSplitFileName(option.Output, splitCount)
-				writer, _ = NewWriter(option.Type, logFileName)
-
-				splitCount++
-			}
-			created = created.Add(interval)
-		}
-	}
-
-	if option.Type != "stdout" {
-		_ = writer.Close()
-		fmt.Println(logFileName, "is created.")
+	for {
+		time.Sleep(time.Hour * 1)
 	}
 	return nil
 }

@@ -17,4 +17,6 @@ COPY --from=0 /bin/flog /bin/flog
 ADD https://github.com/golang/go/raw/master/lib/time/zoneinfo.zip /zoneinfo.zip
 ENV ZONEINFO /zoneinfo.zip
 
+ENV TZ=America/New_York
+
 ENTRYPOINT ["flog"]
