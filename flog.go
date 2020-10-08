@@ -13,19 +13,6 @@ import (
 )
 
 func Worker(option *Option, writer io.WriteCloser) {
-	var loc *time.Location
-	var err error
-	loc, err = time.LoadLocation("America/New_York")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	created	:= time.Now().In(loc)
-
-	var (
-		interval time.Duration
-	)
-
 	x := os.Getenv("MAX_SLEEP")
 	maxSleep := 30
 	if x != "" {
@@ -37,10 +24,22 @@ func Worker(option *Option, writer io.WriteCloser) {
 	}
 	fmt.Println("using max sleep: " + strconv.Itoa(maxSleep))
 
+
+	var loc *time.Location
+	var err error
+	loc, err = time.LoadLocation("America/New_York")
+	if err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
+
 	for {
+
+		created	:= time.Now().In(loc)
+
 		log := NewLog(option.Format, created)
 		_, _ = writer.Write([]byte(log + "\n"))
-		created = created.Add(interval)
+
 
 		rand.Seed(time.Now().UnixNano())
 		n := rand.Intn(maxSleep) // n will be between 0 and 10
