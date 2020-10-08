@@ -1,3 +1,7 @@
+# NOTICE:
+
+We have heavily modified this repo for our Apache log demo. Please use the official repo if you are not working on Apache. This readme is likely outdated. 
+
 # Flog
 
 [![go report card](https://goreportcard.com/badge/github.com/mingrammer/flog)](https://goreportcard.com/report/github.com/mingrammer/flog) [![travis ci](https://travis-ci.com/mingrammer/flog.svg?branch=master)](https://travis-ci.com/mingrammer/flog) [![docker download](https://img.shields.io/docker/pulls/mingrammer/flog.svg)](https://hub.docker.com/r/mingrammer/flog)
@@ -72,7 +76,7 @@ Options:
 $ flog
 
 # Generate 200 lines of logs with a time interval of 10s for each log. It doesn't actually sleep while generating
-$ flog -s 10s -n 200 
+$ flog -s 10s -n 200
 
 # Generate a single log file with 1000 lines of logs, then overwrite existing log file
 $ flog -t log -w
