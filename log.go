@@ -79,7 +79,7 @@ func NewApacheCommonLog(t time.Time) string {
 
 	var uri string
 	for {
-		uri = RandResourceURI()
+		uri = CustomRandomURI()
 		if validURI(uri) {
 			break
 		}
@@ -89,7 +89,7 @@ func NewApacheCommonLog(t time.Time) string {
 	for {
 		x = fmt.Sprintf(
 			ApacheCommonLog,
-			gofakeit.IPv4Address(),
+			RandomIP(),
 			RandAuthUserID(),
 			t.Format(Apache),
 			gofakeit.HTTPMethod(),
@@ -119,11 +119,11 @@ func NewApacheCombinedLog(t time.Time) string {
 	for {
 		x = fmt.Sprintf(
 			ApacheCombinedLog,
-			gofakeit.IPv4Address(),
+			RandomIP(),
 			RandAuthUserID(),
 			t.Format(Apache),
 			gofakeit.HTTPMethod(),
-			RandResourceURI(),
+			CustomRandomURI(),
 			RandHTTPVersion(),
 			s,
 			gofakeit.Number(30, 100000),
