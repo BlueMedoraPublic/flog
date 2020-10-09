@@ -89,9 +89,9 @@ func RandomApacheErrorLog() (string, string) {
 	errorLogs["AH01276: Cannot serve directory /var/www/html/api: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
 	errorLogs["AH01626: authorization result of Require all granted: granted"] = "debug"
 	errorLogs["AH01626: authorization result of <RequireAny>: granted"] = "debug"
-	errorLogs["AH00175: File does not exist: /var/www/html/robots.txt"] = "error"
-	errorLogs["AH00855: Connection refused: proxy: HTTP: attempt to connect to 127.0.0.1:8484 (localhost) failed"] = "error"
-	errorLogs["AH01272: client denied by server configuration: /export/home/live/ap/htdocs/test"] = "error"
+	errorLogs["AH00175: File does not exist: /var/www/html/robots.txt"] = "trace8"
+	errorLogs["AH00855: Connection refused: proxy: HTTP: attempt to connect to 127.0.0.1:8484 (localhost) failed"] = "trace5"
+	errorLogs["AH01272: client denied by server configuration: /export/home/live/ap/htdocs/test"] = "trace1"
 
 	rand.Seed(time.Now().Unix())
 	n := rand.Int() % len(errorLogs)
