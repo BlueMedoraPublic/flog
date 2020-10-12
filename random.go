@@ -40,10 +40,10 @@ func CustomRandomURI() string {
 		"/v1/agents",
 		"/v1/docs",
 		"/v1/upload",
-		"/status",
-		"/about-us",
-		"/help",
-		"/home",
+		"/v1/status",
+		"/v1/about-us",
+		"/v1/help",
+		"/v1/home",
 	}
 	rand.Seed(time.Now().Unix())
 	n := rand.Int() % len(uri)
@@ -81,17 +81,20 @@ func RandomApacheErrorLog() (string, string) {
 	errorLogs["AH02282: No slotmem from mod_heartmonitor"] = "notice"
 	errorLogs["AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'"] = "notice"
 	errorLogs["AH00163: Apache/2.4.6 (CentOS) configured -- resuming normal operations"] = "notice"
-	errorLogs["AH01276: Cannot serve directory /var/www/html/: No matching DirectoryIndex (index.html) found, and server-generated directory index forbidden by Options directive"] = "error"
-	errorLogs["AH01276: Cannot serve directory /var/www/html/about-us: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
+
+	errorLogs["AH01276: Cannot serve directory /var/www/html/v1"] = "error"
+
+	/*errorLogs["AH01276: Cannot serve directory /var/www/html/about-us: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
 	errorLogs["AH01276: Cannot serve directory /var/www/html/help: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
 	errorLogs["AH01276: Cannot serve directory /var/www/html/careers: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
 	errorLogs["AH01276: Cannot serve directory /var/www/html/agents: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
 	errorLogs["AH01276: Cannot serve directory /var/www/html/api: No matching Directory found, and server-generated directory index forbidden by Options directive"] = "error"
+*/
 	errorLogs["AH01626: authorization result of Require all granted: granted"] = "debug"
 	errorLogs["AH01626: authorization result of <RequireAny>: granted"] = "debug"
-	errorLogs["AH00175: File does not exist: /var/www/html/robots.txt"] = "error"
-	errorLogs["AH00855: Connection refused: proxy: HTTP: attempt to connect to 127.0.0.1:8484 (localhost) failed"] = "error"
-	errorLogs["AH01272: client denied by server configuration: /export/home/live/ap/htdocs/test"] = "error"
+//	errorLogs["AH00175: File does not exist: /var/www/html/robots.txt"] = "error"
+//	errorLogs["AH00855: Connection refused: proxy: HTTP: attempt to connect to 127.0.0.1:8484 (localhost) failed"] = "error"
+//	errorLogs["AH01272: client denied by server configuration: /export/home/live/ap/htdocs/test"] = "error"
 
 	rand.Seed(time.Now().Unix())
 	n := rand.Int() % len(errorLogs)
